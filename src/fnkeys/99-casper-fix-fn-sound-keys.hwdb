@@ -1,0 +1,9 @@
+# Bu dosyayı aşağıdaki dizine kopyalayın
+# /lib/udev/hwdb.d/99-casper-volume-keys-stuck-fix.hwdb 
+# Eğer fn ses tuşlarına bastığınızda takılı kalıyorsa bu
+# dosya sorununuzu fixleyecektir.
+
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svn*:pn*:pvr*
+ KEYBOARD_KEY_a0=!mute
+ KEYBOARD_KEY_ae=!volumedown
+ KEYBOARD_KEY_b0=!volumeup
