@@ -62,4 +62,99 @@ AML Output:    dsdt.aml -  224658 bytes  21133 opcodes    4233 named objects
 Compilation successful. 0 Errors, 150 Warnings, 517 Remarks, 423 Optimizations
 ```
 
-// Güncellenecek
+Ben sırasıyla hepsini derlemeyi denediğimde ssdt7.dsl dosyasını derlerken hatayla karşılaştım. Aldığım hata;
+```
+ iasl -ve ssdt7.dsl 
+
+Intel ACPI Component Architecture
+ASL+ Optimizing Compiler/Disassembler version 20200717
+Copyright (c) 2000 - 2020 Intel Corporation
+
+Compiler aborting due to parser-detected syntax error(s)
+ssdt7.dsl     86:                                 }
+Error    6126 -                     syntax error ^ 
+
+ssdt7.dsl    100:                             Case (0x02)
+Error    6126 -                    syntax error ^ 
+
+ssdt7.dsl    101:                             {
+Error    6126 -                 syntax error ^ 
+
+ssdt7.dsl    107:                                 If ((DFUD > Zero))
+Error    6126 -                      syntax error ^ 
+
+ssdt7.dsl    107:                                 If ((DFUD > Zero))
+Error    6114 - Result is not used, operator has no effect ^ 
+
+ssdt7.dsl    108:                                 {
+Error    6126 -                     syntax error ^ 
+
+ssdt7.dsl    112:                                 }
+Error    6126 -                     syntax error ^ 
+
+Input file:    ssdt7.dsl - Compilation aborted due to parser-detected syntax error(s)
+
+Compilation failed. 7 Errors, 0 Warnings, 10 Remarks
+No AML files were generated due to syntax error(s)
+```
+Basit bir syntax hatası gibi görünüyordu. 
+
+```
+Case (One)
+{
+    PGCE = DerefOf (Arg3 [Zero])
+    PGCD = DerefOf (Arg3 [One])
+    OLDV = \_SB.GGOV (0x02010016)
+    \_SB.SGOV (0x02010016, PGCE)
+    If ((PGCD > Zero))
+    {
+        Sleep (PGCD)
+
+        // burada hata veriyor
+        \_SB.GGOV (0x02010016)
+        OLDV
+    }
+
+    If ((\_SB.GGOV (0x02010016) == One))
+    {
+        Sleep (0x96)
+        If ((\_SB.GGOV (0x02010014) == One)){}
+        Else
+        {
+            Notify (\_SB.PCI0.I2C0.DFUD, One) // Device Check
+        }
+    }
+
+    Return (Zero)
+}
+```
+kodlar bu şekildeydi. Hatayı başta bulamadım. Uzunca araştırma yaptıktan sonra https://rog.asus.com/forum/showthread.php?106165-Z370-e-BIOS-bug-that-I-have-fixed bu forumdaki yazıyla karşılaştım ve gerekli yönergeyi takip ettiğimde başarıyla derleyebildim. Kısaca linkte OLDV'nin bir parametre olduğu ve \\_SB.GGOV methodunun tek parametre aldığından ve ona benzeyen iki parametre alan \\_SB.SGOV methodu ile karıştırılmış olabileceğinden bahsedilmiş. Dolayısıyla düzeltildiğinde aşağıdaki şekilde oluyor;
+
+```
+Case (One)
+{
+    PGCE = DerefOf (Arg3 [Zero])
+    PGCD = DerefOf (Arg3 [One])
+    OLDV = \_SB.GGOV (0x02010016)
+    \_SB.SGOV (0x02010016, PGCE)
+    If ((PGCD > Zero))
+    {
+        Sleep (PGCD)
+
+        // burada değişiklik yapıldı
+        \_SB.SGOV (0x02010016, OLDV) 
+    }
+
+    If ((\_SB.GGOV (0x02010016) == One))
+    {
+        Sleep (0x96)
+        If ((\_SB.GGOV (0x02010014) == One)){}
+        Else
+        {
+            Notify (\_SB.PCI0.I2C0.DFUD, One) // Device Check
+        }
+    }
+
+    Return (Zero)
+}
+```
