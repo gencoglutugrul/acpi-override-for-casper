@@ -81,8 +81,7 @@ DefinitionBlock ("", "SSDT", 2, "CASPER", "ERA     ", 0x00000000)
                                 If ((PGCD > Zero))
                                 {
                                     Sleep (PGCD)
-                                    \_SB.GGOV (0x02010016)
-                                    OLDV
+                                    \_SB.SGOV (0x02010016,OLDV)
                                 }
 
                                 If ((\_SB.GGOV (0x02010016) == One))
@@ -102,13 +101,11 @@ DefinitionBlock ("", "SSDT", 2, "CASPER", "ERA     ", 0x00000000)
                                 DFUE = DerefOf (Arg3 [Zero])
                                 DFUD = DerefOf (Arg3 [One])
                                 OLDV = \_SB.GGOV (0x02010014)
-                                \_SB.GGOV (0x02010014)
-                                DFUE
+                                \_SB.SGOV (0x02010014, DFUE)
                                 If ((DFUD > Zero))
                                 {
                                     Sleep (DFUD)
-                                    \_SB.GGOV (0x02010014)
-                                    OLDV
+                                    \_SB.SGOV (0x02010014, OLDV)
                                 }
 
                                 Return (Zero)
