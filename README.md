@@ -131,7 +131,7 @@ Case (One)
     Return (Zero)
 }
 ```
-kodlar bu şekildeydi. Hatayı başta bulamadım. Uzunca araştırma yaptıktan sonra https://rog.asus.com/forum/showthread.php?106165-Z370-e-BIOS-bug-that-I-have-fixed bu forumdaki yazıyla karşılaştım ve gerekli yönergeyi takip ettiğimde başarıyla derleyebildim. Kısaca linkte OLDV'nin bir parametre olduğu ve \\_SB.GGOV methodunun tek parametre aldığından ve ona benzeyen iki parametre alan \\_SB.SGOV methodu ile karıştırılmış olabileceğinden bahsedilmiş. Dolayısıyla düzeltildiğinde aşağıdaki şekilde oluyor;
+kodlar bu şekildeydi. Hatayı başta bulamadım. Uzunca araştırma yaptıktan sonra https://rog.asus.com/forum/showthread.php?106165-Z370-e-BIOS-bug-that-I-have-fixed bu forumdaki yazıyla karşılaştım ve gerekli yönergeyi takip ettiğimde başarıyla derleyebildim. Kısaca linkte ```OLDV```'nin bir parametre olduğu ve ```\_SB.GGOV``` methodunun tek parametre aldığından ve ona benzeyen iki parametre alan ```\_SB.SGOV``` methodu ile karıştırılmış olabileceğinden bahsedilmiş. Dolayısıyla düzeltildiğinde aşağıdaki şekilde oluyor;
 
 ```
 Case (One)
