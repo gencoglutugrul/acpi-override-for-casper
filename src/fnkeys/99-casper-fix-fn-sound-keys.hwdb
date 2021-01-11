@@ -2,6 +2,15 @@
 # /lib/udev/hwdb.d/99-casper-volume-keys-stuck-fix.hwdb 
 # Eğer fn ses tuşlarına bastığınızda takılı kalıyorsa bu
 # dosya sorununuzu fixleyecektir.
+#
+# Dosyayı kaydettikten sonra sırasıyla
+#
+# sudo systemd-hwdb update
+#
+# sudo udevadm trigger
+#
+# komutlarını sırasıyla çalıştırın.
+# artık ses tuşlarınızı takılma olmadan kullanabilirsiniz.
 
 evdev:atkbd:dmi:bvn*:bvr*:bd*:svn*:pn*:pvr*
  KEYBOARD_KEY_a0=!mute
